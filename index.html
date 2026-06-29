@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>মাইজবাগ ব্লাড নেটওয়ার্ক - আল্ট্রা প্রফেশনাল v5</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="blood-motion-bg" id="bloodRain"></div>
+
+  <div class="toast-bar" id="toast"></div>
+
+  <div id="authContainer" class="layer-wrapper flex-center">
+    <div class="premium-glass-card animate-pop">
+      <div class="brand-avatar">🩸</div>
+      <h2 class="brand-title">রক্তদানে আমাদের মাইজবাগ</h2>
+      <p class="brand-subtitle">Log in</p>
+
+      <form id="loginForm" onsubmit="event.preventDefault(); handleLogin();">
+        <div class="neon-input-group">
+          <label class="neon-label">N</label>
+          <input type="text" id="loginName" placeholder="আপনার পূর্ণ নাম (Full Name)" required>
+        </div>
+        <div class="neon-input-group">
+          <label class="neon-label">NU</label>
+          <input type="tel" id="loginPhone" placeholder="মোবাইল নম্বর (Mobile Number)" required>
+        </div>
+        <div class="neon-input-group">
+          <label class="neon-label">P</label>
+          <input type="password" id="loginPass" placeholder="পাসওয়ার্ড (Password: 234)" required>
+        </div>
+        <button type="submit" class="action-gradient-btn">লগইন করুন →</button>
+      </form>
+
+      <div class="auth-toggle-text" onclick="toggleAuthView('signup')">নতুন অ্যাকাউন্ট তৈরি করুন (Create Account)</div>
+    </div>
+  </div>
+
+  <div id="signupContainer" class="layer-wrapper flex-center" style="display:none;">
+    <div class="premium-glass-card">
+      <h2 class="brand-title">নতুন রক্তদাতা নিবন্ধন</h2>
+      <p class="brand-subtitle" style="margin-bottom: 15px;">সঠিক তথ্য দিয়ে ফরমটি পূরণ করুন</p>
+      
+      <form id="signupForm" onsubmit="event.preventDefault(); handleSignup();">
+        <div class="neon-input-group">
+          <input type="text" id="signupName" placeholder="আপনার পুরো নাম" required>
+        </div>
+        <div class="neon-input-group">
+          <select id="signupBlood" required>
+            <option value="">আপনার ব্লাড গ্রুপ সিলেক্ট করুন</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+          </select>
+        </div>
+        <div class="neon-input-group">
+          <input type="tel" id="signupPhone" placeholder="মোবাইল নম্বর" required>
+        </div>
+        <div class="neon-input-group">
+          <input type="text" id="signupAddr" placeholder="ঠিকানা (যেমন: মাইজবাগ বাজার)" required>
+        </div>
+        <button type="submit" class="action-gradient-btn">নিবন্ধন সম্পন্ন করুন ✨</button>
+      </form>
+      <div class="auth-toggle-text" onclick="toggleAuthView('login')">ইতিমধ্যে অ্যাকাউন্ট আছে? লগইন করুন</div>
+    </div>
+  </div>
+
+
+  <div id="appContainer" class="layer-wrapper app-main-layout" style="display:none;">
+    
+    <div class="app-topbar">
+      <div class="topbar-brand-area" onclick="switchView('dashboard')">
+        <span class="pulse-status-dot"></span>
+        <div class="main-title">রক্তদানে আমাদের মাইজবাগ</div>
+      </div>
+      <div class="topbar-action-area">
+        <div class="ai-badge" onclick="toggleAiAssistant()">AI গাইড</div>
+        <div class="profile-avatar-circle" id="appHeaderAvatar" onclick="switchView('profile')">M</div>
+      </div>
+    </div>
+
+    <div id="aiPanel" class="floating-ai-window" style="display:none;">
+      <div class="ai-window-header">
+        <span>🤖 Ratul AI</span>
+        <button onclick="toggleAiAssistant()">✕</button>
+      </div>
+      <div class="ai-window-chat-area" id="aiChatSpace">
+        <div class="ai-msg-bot">আস-সালামু আলাইকুম! রক্তের গ্রুপ ও ডোনারের তথ্য খুঁজতে আমাকে যেকোনো প্রশ্ন করতে পারেন।</div>
+      </div>
+      <div class="ai-window-input-bar">
+        <input type="text" id="aiQueryInput" placeholder="এখানে কিছু লিখুন..." onkeypress="if(event.key==='Enter') processAiQuestion()">
+        <button onclick="processAiQuestion()">➤</button>
+      </div>
+    </div>
+
+    <div id="viewDashboard" class="view-panel active">
+      <div class="fb-style-composer">
+        <div class="composer-row">
+          <div class="profile-avatar-circle" id="fbInputAvatar">M</div>
+          <input type="text" placeholder="পোস্ট করা + দেখতে পাওয়া (Facebook এর মতো)..." readonly onclick="openComposerModal()">
+        </div>
+      </div>
+      
+      <div id="newsFeedStream" class="feed-stream"></div>
+    </div>
+
+    <div id="viewAboutApp" class="view-panel">
+      <button class="navigation-back-btn" onclick="switchView('dashboard')">← মেইন স্ক্রিনে ফিরুন</button>
+      <div class="premium-glass-card details-view">
+        <h3 class="section-card-title">ℹ️ আমাদের অ্যাপ সম্পর্কে</h3>
+        <p class="section-card-desc">রক্তদানে আমাদের মাইজবাগ নেটওয়ার্ক হলো মাইজবাগ এলাকার মানুষের জন্য তৈরি একটি আধুনিক ও স্বয়ংক্রিয় রক্তদান ব্যবস্থাপনা অ্যাপ্লিকেশন। এর মাধ্যমে সেকেন্ডের মধ্যে রক্তের গ্রুপ অনুযায়ী রক্তদাতার সন্ধান এবং সরাসরি যোগাযোগ করা সম্ভব।</p>
+        <div class="app-meta-tags">
+          <span>Version: 5.0.2</span>
+          <span>Developer: Active Creator</span>
+          <span>Type: Social Impact App</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewRequestForm" class="view-panel">
+      <button class="navigation-back-btn" onclick="switchView('dashboard')">← মেইন স্ক্রিনে ফিরুন</button>
+      <div class="premium-glass-card">
+        <h3 class="section-card-title">🆘 রক্তের জরুরি রিকোয়েস্ট ফর্ম</h3>
+        <p class="section-card-desc" style="margin-bottom:15px;">এখানে তথ্য সাবমিট করলে তা সরাসরি ফেসবুকের মতো মেইন স্ক্রিনের নিউজফিডে চলে যাবে।</p>
+        
+        <form onsubmit="event.preventDefault(); handleRequestFormSubmit();" class="vertical-form">
+          <input type="text" id="reqPatientProblem" class="premium-input-field" placeholder="রোগীর সমস্যা বা নাম" required>
+          <select id="reqBloodGroup" class="premium-input-field" required>
+            <option value="">কোন গ্রুপের রক্ত প্রয়োজন? (Select Blood)</option>
+            <option>A+</option><option>A-</option><option>B+</option><option>B-</option>
+            <option>O+</option><option>O-</option><option>AB+</option><option>AB-</option>
+          </select>
+          <input type="text" id="reqHospitalLoc" class="premium-input-field" placeholder="হাসপাতাল অথবা রক্তদানের স্থান" required>
+          <input type="tel" id="reqContactPhone" class="premium-input-field" placeholder="জরুরি যোগাযোগের মোবাইল নম্বর" required>
+          <button type="submit" class="action-gradient-btn">নিউজফিডে রিকোয়েস্ট পোস্ট করুন 🚀</button>
+        </form>
+      </div>
+    </div>
+
+    <div id="viewDonors" class="view-panel">
+      <h3 class="page-header-title">🩸 জীবনরক্ষাকারী ডোনার তালিকা</h3>
+      <div class="interactive-search-bar">
+        <input type="text" id="globalSearchInput" placeholder="🔍 নাম, ব্লাড গ্রুপ অথবা এলাকা লিখে লাইভ সার্চ..." oninput="executeLiveSearch()">
+      </div>
+      <div id="donorCardContainer" class="vertical-list-container"></div>
+    </div>
+
+    <div id="viewDonorDetails" class="view-panel">
+      <button class="navigation-back-btn" onclick="switchView('donors')">← তালিকায় ফিরে যান</button>
+      <div class="donor-details-profile-card animate-pop">
+        <div class="profile-huge-avatar" id="detailsBigAvatar">B</div>
+        <h2 id="detailsDonorName" class="details-name">লোড হচ্ছে...</h2>
+        <div class="details-blood-tag" id="detailsBloodTag">O+</div>
+        
+        <div class="details-description-box">
+          <h4>📋 ডোনার সম্পর্কে তথ্য:</h4>
+          <div id="detailsFullInfoParagraph" class="para-content">তথ্য লোড হচ্ছে...</div>
+        </div>
+
+        <div class="details-communication-row">
+          <a id="detailsCallAnchor" href="#" class="comm-btn call-btn">📞 সরাসরি কল</a>
+          <button id="detailsChatButton" class="comm-btn chat-btn">💬 ইনবক্সে চ্যাট</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="viewChat" class="view-panel">
+      <h3 class="page-header-title">💬 মেসেঞ্জার ইনবক্স</h3>
+      <div id="inboxUsersListContainer" class="vertical-list-container"></div>
+    </div>
+
+    <div id="viewChatWindow" class="view-panel chat-window-active">
+      <div class="chat-header-identity">
+        <button class="chat-back-arrow" onclick="switchView('chat')">←</button>
+        <div class="profile-avatar-circle" id="chatRoomAvatar">U</div>
+        <div id="chatRoomPartnerName" class="partner-name">ব্যবহারকারী</div>
+      </div>
+      <div class="chat-messages-stream" id="chatMessageStreamSpace"></div>
+      <div class="chat-input-dock">
+        <input type="text" id="chatTextInputField" placeholder="আপনার মেসেজটি লিখুন..." onkeypress="if(event.key==='Enter') dispatchChatMessage()">
+        <button onclick="dispatchChatMessage()">➤</button>
+      </div>
+    </div>
+
+    <div id="viewProfile" class="view-panel">
+      <div class="donor-details-profile-card">
+        <div class="profile-huge-avatar" id="myProfileHugeAvatar">M</div>
+        <h2 id="myProfileName" class="details-name">আপনার নাম</h2>
+        <div class="details-blood-tag" id="myProfileBloodBadge">O+</div>
+        <p id="myProfileBioText" class="profile-bio-quote">🩸 রক্তদানে আমাদের মাইজবাগ প্ল্যাটফর্মের গর্বিত সদস্য।</p>
+        
+        <div class="profile-content-tab-selectors">
+          <button class="profile-tab-btn active" id="btnTabBio" onclick="changeProfileTab('bio')">আমার Bio</button>
+          <button class="profile-tab-btn" id="btnTabPosts" onclick="changeProfileTab('posts')">আমার Post সমূহ</button>
+        </div>
+
+        <div id="profileTabDynamicViewSpace" class="profile-tab-content-box"></div>
+        <button class="app-logout-btn" onclick="executeLogout()">🚪 অ্যাকাউন্ট থেকে লগআউট</button>
+      </div>
+    </div>
+
+    <div class="app-bottom-nav">
+      <div class="nav-button-item" id="btnNavAbout" onclick="switchView('aboutApp')">
+        <span class="nav-icon">ℹ️</span><span class="nav-text">About</span>
+      </div>
+      <div class="nav-button-item" id="btnNavReq" onclick="switchView('requestForm')">
+        <span class="nav-icon">🆘</span><span class="nav-text">রিকোয়েস্ট</span>
+      </div>
+      <div class="nav-button-item active" id="btnNavDash" onclick="switchView('dashboard')">
+        <span class="nav-icon">🏠</span><span class="nav-text">মেইন</span>
+      </div>
+      <div class="nav-button-item" id="btnNavDonors" onclick="switchView('donors')">
+        <span class="nav-icon">📋</span><span class="nav-text">ডোনারস</span>
+      </div>
+      <div class="nav-button-item" id="btnNavChat" onclick="switchView('chat')">
+        <span class="nav-icon">💬</span><span class="nav-text">Chat</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="composerModalPopup" class="global-modal-overlay" style="display:none;">
+    <div class="modal-window-body animate-pop">
+      <div class="modal-window-header">
+        <h3>নতুন পোস্ট তৈরি করুন</h3>
+        <button onclick="closeComposerModal()">✕</button>
+      </div>
+      <div class="modal-window-content">
+        <textarea id="composerInputTextArea" placeholder="রক্তের গ্রুপ, হাসপাতাল বা আপনার জরুরি বার্তাটি এখানে লিখুন..."></textarea>
+        <button class="modal-post-submit-btn" onclick="publishNewPost()">নিউজফিডে পোস্ট করুন 🚀</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

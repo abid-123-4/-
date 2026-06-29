@@ -1,0 +1,182 @@
+/* ==========================================================================
+   মাইজবাগ আল্ট্রা ব্লাড - আল্ট্রা অ্যাডভান্সড ও গ্লাস-মরফিজম থিম (v5.0)
+   ========================================================================== */
+
+:root {
+  --blood-color: #e63946;
+  --crimson-dark: #8b0000;
+  --glass-background: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(230, 57, 70, 0.25);
+  --app-dark-text: #1d3557;
+  --app-muted-text: #457b9d;
+  --bg-canvas: #fff5f5;
+  --card-shadow: 0 8px 32px 0 rgba(230, 57, 70, 0.08);
+}
+
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background-color: var(--bg-canvas);
+  color: var(--app-dark-text);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* 🩸 ব্যাকগ্রাউন্ডে রক্ত ফোঁটা ফোঁটা পড়ার মোশন অ্যানিমেশন */
+.blood-motion-bg {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: -1; overflow: hidden;
+}
+.single-blood-drop {
+  position: absolute; width: 4px; height: 15px;
+  background: linear-gradient(to bottom, transparent, var(--blood-color));
+  border-radius: 50%; opacity: 0.6;
+  animation: dripFall linear infinite;
+}
+@keyframes dripFall {
+  0% { transform: translateY(-30px); opacity: 0; }
+  15% { opacity: 0.6; }
+  85% { opacity: 0.6; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+/* আর্কিটেকচারাল লেয়ার কন্ট্রোল */
+.layer-wrapper { min-height: 100vh; position: relative; z-index: 10; padding: 15px; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.app-main-layout { padding: 0 0 75px 0; }
+.view-panel { display: none; padding: 16px; max-width: 520px; margin: 0 auto; animation: viewFadeIn 0.3s ease-out; }
+.active { display: block !important; }
+
+@keyframes viewFadeIn { from { opacity: 0; transform: scale(0.98) translateY(10px); } to { opacity: 1; transform: scale(1) translateY(0); } }
+.animate-pop { animation: popEffect 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popEffect { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+/* 🔐 প্রিমিয়াম গ্লাস কার্ড (স্কেচ ১ স্টাইল) */
+.premium-glass-card {
+  background: var(--glass-background); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border: 2px solid var(--glass-border); border-radius: 24px; padding: 28px 22px;
+  width: 100%; max-width: 375px; box-shadow: var(--card-shadow); text-align: center;
+}
+.brand-avatar { font-size: 55px; margin-bottom: 8px; filter: drop-shadow(0 4px 10px rgba(230,57,70,0.3)); }
+.brand-title { font-size: 21px; font-weight: 800; color: var(--crimson-dark); }
+.brand-subtitle { font-size: 16px; color: var(--app-dark-text); font-weight: 700; margin-bottom: 24px; letter-spacing: 0.5px; }
+
+/* এনহান্সড নেওন ইনপুট গ্রুপ (N, NU, P শর্টকাটের জন্য) */
+.neon-input-group {
+  display: flex; align-items: center; background: white;
+  border: 1.5px solid var(--blood-color); border-radius: 12px;
+  margin-bottom: 15px; padding: 0 14px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+.neon-label { font-weight: 900; color: var(--blood-color); width: 35px; text-align: left; font-size: 15px; border-right: 1.5px solid var(--glass-border); margin-right: 10px; }
+.neon-input-group input, .neon-input-group select { width: 100%; height: 46px; border: none; background: transparent; outline: none; font-size: 14px; color: var(--app-dark-text); font-weight: 500; }
+.action-gradient-btn { width: 100%; background: linear-gradient(135deg, var(--blood-color), var(--crimson-dark)); color: white; border: none; height: 48px; border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; box-shadow: 0 5px 15px rgba(230, 57, 70, 0.35); transition: all 0.2s; }
+.action-gradient-btn:active { transform: scale(0.98); filter: brightness(0.9); }
+.auth-toggle-text { margin-top: 18px; font-size: 13px; color: #1d4ed8; cursor: pointer; font-weight: 600; text-decoration: underline; }
+
+/* 📱 টপবার ও আইডেন্টিটি লেয়ার */
+.app-topbar { background: white; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 16px; border-bottom: 2.5px solid var(--blood-color); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 10px rgba(0,0,0,0.03); }
+.topbar-brand-area { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.pulse-status-dot { width: 9px; height: 9px; background: #22c55e; border-radius: 50%; box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7); animation: pulseRing 1.6s infinite; }
+@keyframes pulseRing { 70% { box-shadow: 0 0 0 8px rgba(34, 197, 94, 0); } 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); } }
+.main-title { font-size: 15px; font-weight: 900; color: var(--crimson-dark); }
+.topbar-action-area { display: flex; align-items: center; gap: 12px; }
+.ai-badge { background: #fff5f5; border: 1.5px solid var(--blood-color); color: var(--blood-color); font-weight: 800; padding: 4px 10px; border-radius: 20px; font-size: 11px; cursor: pointer; }
+.profile-avatar-circle { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--blood-color), var(--crimson-dark)); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; box-shadow: 0 3px 8px rgba(230,57,70,0.2); }
+
+/* 📰 ফেসবুক ডিজাইনের মেইন টাইমলাইন */
+.fb-style-composer { background: white; padding: 14px; border-radius: 16px; border: 1px solid var(--glass-border); margin-bottom: 16px; box-shadow: var(--card-shadow); }
+.composer-row { display: flex; align-items: center; gap: 12px; }
+.fb-style-composer input { flex: 1; height: 40px; border-radius: 24px; border: 1px solid #e5e7eb; padding: 0 16px; background: #f3f4f6; outline: none; cursor: pointer; font-size: 13px; color: #4b5563; }
+
+.feed-stream { display: flex; flex-direction: column; gap: 14px; }
+.feed-card-item { background: white; border-radius: 16px; padding: 16px; border: 1px solid var(--glass-border); box-shadow: var(--card-shadow); }
+.fci-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.fci-meta-data h4 { font-size: 14px; font-weight: 700; color: var(--app-dark-text); }
+.fci-meta-data span { font-size: 11px; color: var(--app-muted-text); }
+.fci-message-content { font-size: 14px; line-height: 1.6; color: #1f2937; margin-bottom: 12px; white-space: pre-wrap; word-break: break-word; }
+.fci-actions-bar { display: flex; border-top: 1px solid #f3f4f6; padding-top: 10px; justify-content: space-around; }
+.fci-interact-btn { background: none; border: none; font-size: 13px; font-weight: bold; color: #4b5563; cursor: pointer; display: flex; align-items: center; gap: 5px; }
+.fci-interact-btn.liked { color: var(--blood-color); }
+
+/* 📋 ডোনার লিস্ট ও প্রোফাইল ইনফো */
+.page-header-title { font-size: 17px; font-weight: 900; margin-bottom: 14px; color: var(--crimson-dark); text-align: center; }
+.interactive-search-bar { background: white; border: 2px solid var(--blood-color); border-radius: 14px; padding: 4px 12px; margin-bottom: 16px; box-shadow: var(--card-shadow); }
+.interactive-search-bar input { width: 100%; height: 38px; border: none; outline: none; background: transparent; font-size: 14px; color: var(--app-dark-text); }
+
+.vertical-list-container { display: flex; flex-direction: column; gap: 10px; }
+.donor-list-row { background: white; border-radius: 14px; padding: 14px; border: 1px solid var(--glass-border); display: flex; align-items: center; justify-content: space-between; box-shadow: var(--card-shadow); cursor: pointer; transition: transform 0.2s; }
+.donor-list-row:active { transform: scale(0.98); }
+.dl-avatar-box { width: 42px; height: 42px; border-radius: 12px; background: rgba(230,57,70,0.08); color: var(--blood-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; border: 1px solid rgba(230,57,70,0.15); }
+.dl-details-box { flex: 1; margin-left: 14px; }
+.dl-details-box h4 { font-size: 14px; font-weight: 700; color: var(--app-dark-text); }
+.dl-details-box p { font-size: 12px; color: var(--app-muted-text); margin-top: 2px; }
+.dl-action-indicator { font-size: 12px; color: var(--blood-color); font-weight: bold; }
+
+/* 👤 ডোনার ডিটেইলস ও প্রোফাইল আর্কিটেকচার (ভিউ ৫ ও ৮) */
+.donor-details-profile-card { background: white; border-radius: 24px; border: 2px solid var(--blood-color); padding: 24px 16px; text-align: center; box-shadow: var(--card-shadow); }
+.profile-huge-avatar { width: 76px; height: 76px; border-radius: 50%; background: linear-gradient(135deg, var(--blood-color), var(--crimson-dark)); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; margin: 0 auto 12px; box-shadow: 0 4px 12px rgba(230,57,70,0.25); }
+.details-blood-tag { background: var(--crimson-dark); color: white; width: fit-content; padding: 4px 16px; border-radius: 20px; margin: 0 auto 14px; font-weight: 800; font-size: 13px; letter-spacing: 0.5px; }
+.details-description-box { background: #fffafb; border-radius: 14px; padding: 14px; text-align: left; border: 1.5px dashed var(--blood-color); margin-bottom: 20px; }
+.details-description-box h4 { font-size: 13px; color: var(--crimson-dark); margin-bottom: 6px; }
+.para-content { font-size: 13px; line-height: 1.6; color: #374151; }
+.details-communication-row { display: flex; gap: 12px; }
+.comm-btn { flex: 1; text-align: center; text-decoration: none; padding: 12px; border-radius: 10px; font-size: 14px; font-weight: bold; border: none; cursor: pointer; }
+.call-btn { background: #e0f2fe; color: #0369a1; }
+.chat-btn { background: #dcfce7; color: #15803d; }
+
+/* 💬 অ্যাডভান্সড চ্যাট উইন্ডো রাউটার */
+.chat-header-identity { background: white; border-bottom: 2px solid var(--blood-color); padding: 12px 16px; display: flex; align-items: center; gap: 12px; position: sticky; top: 60px; z-index: 20; }
+.chat-back-arrow { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--app-dark-text); }
+.partner-name { font-weight: 800; font-size: 15px; color: var(--app-dark-text); }
+.chat-messages-stream { height: calc(100vh - 245px); overflow-y: auto; background: #f9fafb; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+.chat-bubble { padding: 10px 14px; border-radius: 16px; max-width: 78%; font-size: 13.5px; line-height: 1.4; word-break: break-word; }
+.chat-bubble.my-msg { background: var(--blood-color); color: white; align-self: flex-end; border-bottom-right-radius: 4px; box-shadow: 0 2px 8px rgba(230,57,70,0.15); }
+.chat-bubble.peer-msg { background: white; color: #111827; align-self: flex-start; border-bottom-left-radius: 4px; border: 1px solid #e5e7eb; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+.chat-input-dock { display: flex; padding: 12px; background: white; border-top: 1px solid #e5e7eb; gap: 10px; }
+.chat-input-dock input { flex: 1; height: 42px; border-radius: 24px; border: 1px solid #d1d5db; padding: 0 16px; outline: none; font-size: 14px; background: #f9fafb; }
+.chat-input-dock button { width: 42px; height: 42px; border-radius: 50%; border: none; background: var(--blood-color); color: white; cursor: pointer; font-size: 16px; }
+
+/* 🧬 প্রোফাইল সাব-ট্যাব এবং ফর্ম লেআউট */
+.profile-content-tab-selectors { display: flex; border-bottom: 2px solid #f3f4f6; margin-top: 18px; }
+.profile-tab-btn { flex: 1; padding: 10px; font-size: 13px; font-weight: bold; color: var(--app-muted-text); background: none; border: none; cursor: pointer; }
+.profile-tab-btn.active { color: var(--blood-color); border-bottom: 2.5px solid var(--blood-color); }
+.profile-tab-content-box { margin-top: 14px; }
+.premium-input-field { width: 100%; height: 42px; border: 1px solid #c9d2db; border-radius: 10px; padding: 0 12px; outline: none; font-size: 13.5px; background: white; color: var(--app-dark-text); }
+.vertical-form { display: flex; flex-direction: column; gap: 12px; }
+.navigation-back-btn { background: white; border: 1.5px solid var(--blood-color); color: var(--blood-color); padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: bold; cursor: pointer; margin-bottom: 14px; }
+.app-logout-btn { background: #fee2e2; color: #ef4444; border: none; padding: 8px 20px; border-radius: 8px; font-size: 12px; font-weight: bold; margin-top: 20px; cursor: pointer; }
+
+/* 🤖 AI অ্যাসিস্ট্যান্ট ফ্লোর্টিং প্যানেল */
+.floating-ai-window { position: fixed; bottom: 75px; right: 16px; left: 16px; background: white; border: 2px solid var(--blood-color); border-radius: 16px; display: flex; flex-direction: column; overflow: hidden; z-index: 1000; max-width: 410px; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.15); }
+.ai-window-header { background: var(--blood-color); color: white; padding: 12px; font-size: 13px; font-weight: bold; display: flex; justify-content: space-between; }
+.ai-window-header button { background: none; border: none; color: white; cursor: pointer; font-size: 14px; }
+.ai-window-chat-area { height: 170px; overflow-y: auto; padding: 12px; font-size: 12.5px; display: flex; flex-direction: column; gap: 8px; background: #f9fafb; }
+.ai-msg-bot { background: #e5e7eb; padding: 8px 12px; border-radius: 12px; align-self: flex-start; max-width: 85%; color: black; }
+.ai-msg-user { background: var(--blood-color); color: white; padding: 8px 12px; border-radius: 12px; align-self: flex-end; max-width: 85%; }
+.ai-window-input-bar { display: flex; padding: 8px; border-top: 1px solid #e5e7eb; background: white; }
+.ai-window-input-bar input { flex: 1; border: none; outline: none; padding: 6px; font-size: 13px; }
+.ai-window-input-bar button { border: none; background: var(--blood-color); color: white; padding: 0 14px; border-radius: 6px; cursor: pointer; }
+
+/* 📥 মেটেরিয়াল বটম নেভিগেশন (৫টি বাটন বিশিষ্ট) */
+.app-bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; height: 60px; display: flex; justify-content: space-around; align-items: center; border-top: 2.5px solid var(--blood-color); z-index: 1000; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); }
+.nav-button-item { display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 11px; color: var(--app-muted-text); cursor: pointer; font-weight: 700; flex: 1; height: 100%; }
+.nav-icon { font-size: 18px; }
+.nav-text { margin-top: 2px; font-size: 10px; }
+.nav-button-item.active { color: var(--blood-color); background: #fff5f5; }
+
+/* গ্লোবাল মডাল পপআপ */
+.global-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 2000; }
+.modal-window-body { background: white; width: 92%; max-width: 420px; border-radius: 20px; border: 2px solid var(--blood-color); overflow: hidden; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.modal-window-header { padding: 12px 16px; background: #f9fafb; display: flex; justify-content: space-between; font-weight: bold; border-bottom: 1px solid #f3f4f6; }
+.modal-window-header button { background: none; border: none; font-size: 18px; cursor: pointer; color: var(--app-muted-text); }
+.modal-window-content { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.modal-window-content textarea { width: 100%; height: 110px; padding: 12px; border-radius: 12px; border: 1px solid #d1d5db; outline: none; resize: none; font-size: 14px; }
+.modal-post-submit-btn { background: var(--blood-color); color: white; border: none; padding: 12px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 14px; }
+
+/* টোস্ট নোটিফিকেশন বার */
+.toast-bar { position: fixed; bottom: -70px; left: 50%; transform: translateX(-50%); background: var(--crimson-dark); color: white; padding: 12px 24px; border-radius: 30px; font-size: 13px; font-weight: bold; z-index: 3000; transition: bottom 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 10px 15px rgba(0,0,0,0.2); }
+.toast-bar.show { bottom: 85px; }
